@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 from utils import update_canvass
 
-def simulator(env, canvass, epochs, loop):
+def simulator(env, canvass, epochs, loop, frames=20, save=False):
     n_rows = env["n_rows"]
     n_cols = env["n_cols"]
 
@@ -14,12 +14,13 @@ def simulator(env, canvass, epochs, loop):
             element_id = element[0]
             loop[element_id](loc, env)
 
-            if epoch % (epochs / 20) == 0:
+            if epoch % (epochs / frames) == 0:
                 canvass = update_canvass(canvass=canvass, env=env, n_rows=n_rows, n_cols=n_cols)
                 plt.figure(figsize = (10, 5))
                 plt.imshow(canvass, cmap ='jet')
                 plt.colorbar(cmap ='jet')
 
-                # fname = "gif/test_" + str(epoch)
-                # plt.savefig(fname)
-                # plt.clf()
+                if save:
+                    fname = "gif/test_" + str(epoch)
+                    plt.savefig(fname)
+                    plt.clf()
