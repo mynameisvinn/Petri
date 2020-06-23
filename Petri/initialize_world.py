@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from utils import _draw, _return_random_loc, _sample
+from .utils import _draw, _return_random_loc, _sample
 
 def create_oil_world(n_rows, n_cols, n_dregs, n_oil):
     world = {}

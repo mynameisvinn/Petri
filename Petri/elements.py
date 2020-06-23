@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample
+from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample
 
 def Dreg(curr_loc, env):
     

@@ -1,7 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 
-from utils import update_canvass
+from .utils import update_canvass
 
 def simulator(env, canvass, epochs, loop, frames=20, save=False):
     n_rows = env["n_rows"]
