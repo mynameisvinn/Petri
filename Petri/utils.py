@@ -34,17 +34,17 @@ def _draw(prob):
     return np.random.uniform() > (1 - prob)
 
 
-def _summarize(env):
+def summarize(env):
     """tabulate elements in world.
     """
     count = {}
-    for i, j in env.values():
-        if i not in count.keys():
-            count[i] = 1
-        else:
-            count[i] += 1
-    print(count) 
-
+    for k, v in env.items():
+        if isinstance(k, tuple):
+            if v[0] not in count.keys():
+                count[v[0]] = 1
+            else:
+                count[v[0]] += 1
+    return count
 
 
 def _return_all_neighboring_locs(loc, env):
