@@ -12,9 +12,9 @@ def Dreg(curr_loc, env):
 
     if neighbor not in env.keys():
         if _draw(.30):  # create res with 30% chance
-            env[neighbor] = (2, None)
+            env[neighbor] = ("Res", None)
         elif _draw(.01):  # or create a new dreg with 1% chance
-            env[neighbor] = (1, None)
+            env[neighbor] = ("Dreg", None)
         else:
             pass
     
@@ -29,14 +29,14 @@ def Dreg(curr_loc, env):
     open_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
     if open_locs:
         next_loc = random.choice(open_locs)
-        e = (1, None)
+        e = ("Dreg", None)
         _move(curr_loc, next_loc, e, env)
     else:
         pass
 
     
 def Res(curr_loc, env):
-    e = (2, None)
+    e = ("Res", None)
     free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
     if free_locs:
         next_loc = random.choice(free_locs)
@@ -45,7 +45,7 @@ def Res(curr_loc, env):
 
 def Data(curr_loc, env):
     if _draw(0.20):
-        e = (4, env[curr_loc][1])
+        e = ("Data", env[curr_loc][1])
         free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
         if free_locs:
             next_loc = random.choice(free_locs)
@@ -58,11 +58,11 @@ def Emitter(curr_loc, env):
     neighbors = _return_neighboring_occupied_locs(curr_loc, env)
     if neighbors:
         for neighbor in neighbors:
-            if env[neighbor][0] == 2:
+            if env[neighbor][0] == "Res":
                 if _draw(.90):
-                    env[neighbor] = (4, _sample())
+                    env[neighbor] = ("Data", _sample())
                 else:
-                    env[neighbor] = (5, None)
+                    env[neighbor] = ("Emitter", None)
                                 
                 
 def Sorter(curr_loc, env):
@@ -86,7 +86,7 @@ def Sorter(curr_loc, env):
         neighbor = env[right_loc]
         
         # we only want data elements...
-        if neighbor[0] == 4:
+        if neighbor[0] == "Data":
             dist = 3
             
             # move it if data is greater
@@ -95,16 +95,16 @@ def Sorter(curr_loc, env):
                 # move data up and the left
 
                 next_loc = (curr_loc[0] - dist, curr_loc[1] - dist)
-                env[next_loc] = (4, neighbor[1])
+                env[next_loc] = ("Data", neighbor[1])
                 env.pop(right_loc)
                 
                 # sorter update its internal value
-                env[curr_loc] = (3, neighbor[1])
+                env[curr_loc] = ("Sorter", neighbor[1])
             
             # if not... move data down and left
             else:
                 next_loc = (curr_loc[0] + dist, curr_loc[1] - dist)
-                env[next_loc] = (4, neighbor[1])
+                env[next_loc] = ("Data", neighbor[1])
                 env.pop(right_loc)
 
                 
@@ -113,19 +113,19 @@ def Sorter(curr_loc, env):
     neighbors = _return_neighboring_occupied_locs(curr_loc, env)
     if neighbors:
         for neighbor in neighbors:
-            if env[neighbor][0] == 2:
-                env[neighbor] = (3, _sample())
+            if env[neighbor][0] == "Res":
+                env[neighbor] = ("Sorter", _sample())
     
     
     # step 3 - move if one of its neighbors is a Sorter
     neighbors = _return_neighboring_occupied_locs(curr_loc, env)
     if neighbors:
         for neighbor in neighbors:
-            if env[neighbor][0] == 3:
+            if env[neighbor][0] == "Sorter":
                 free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
                 if free_locs:
                     next_loc = random.choice(free_locs)
-                    e = (3, env[curr_loc][1])
+                    e = ("Sorter", env[curr_loc][1])
                     _move(curr_loc, next_loc, e, env)
                     break
                 else:
@@ -136,7 +136,7 @@ def Sorter(curr_loc, env):
     neighbors = _return_neighboring_occupied_locs(curr_loc, env)
     if neighbors:
         for neighbor in neighbors:
-            if env[neighbor][0] == 3:
+            if env[neighbor][0] == "Sorter":
                 count += 1
     if count > 3:
         env.pop(next_loc)  # it is a next_loc because it moved in step 3
@@ -147,8 +147,8 @@ def Oil(curr_loc, env):
     neighbors = _return_neighboring_occupied_locs(curr_loc, env)
     if neighbors:
         for neighbor in neighbors:
-            if env[neighbor][0] == 2:
-                env[neighbor] = (6, None)
+            if env[neighbor][0] == "Res":
+                env[neighbor] = ("Oil", None)
     
     # step 2 move if it's not surrounded by enough oil droplets
     # step 2a - count how many neighbors are oil droplets
@@ -156,7 +156,7 @@ def Oil(curr_loc, env):
     neighbors = _return_neighboring_occupied_locs(curr_loc, env)
     if neighbors:
         for neighbor in neighbors:
-            if env[neighbor][0] == 6:  # 6 is oil's id
+            if env[neighbor][0] == "Oil":  # 6 is oil's id
                 count += 1
 
     # find its blob, which includes itself
@@ -169,7 +169,7 @@ def Oil(curr_loc, env):
             for potential_loc in unoccupied_locs:
                 potential_neighbors = _return_neighboring_occupied_locs(potential_loc, env)
                 if len(potential_neighbors) > count:
-                    element = (6, None)
+                    element = ("Oil", None)
                     _move(curr_loc, potential_loc, element, env)
                     return True
     return True
@@ -179,7 +179,7 @@ def Force(curr_loc, env):
     free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
     if free_locs:
         loc = random.choice(free_locs)
-        env[loc] = (8, None)
+        env[loc] = ("Force", None)
     
 def Wind(curr_loc, env):
     
@@ -190,9 +190,9 @@ def Wind(curr_loc, env):
         left_neighbors = [l for l in neighbors if l[1] < curr_loc[1]]
         if left_neighbors:
             for neighbor in left_neighbors:
-                if env[neighbor][0] == 1:
+                if env[neighbor][0] == "Kite":
                     kite_new_loc = (neighbor[0], neighbor[1] - 2)
-                    element = (1, None)
+                    element = ("Kite", None)
                     _move(neighbor, kite_new_loc, element, env)
                     env.pop(curr_loc)  # wind disappears after pushing
                 elif env[neighbor][0] == 8:

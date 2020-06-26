@@ -18,18 +18,6 @@ def _return_random_loc(n_rows, n_cols):
     return (i, j)
 
 
-def update_canvass(canvass, env, n_rows, n_cols):
-    """update numpy matrix given world.
-    """
-    canvass[:] = 0
-    for i in range(n_rows):
-        for j in range(n_cols):
-            loc = (i, j)
-            if loc in env.keys():
-                canvass[i][j] = env[loc][0]
-    return canvass
-
-
 def _draw(prob):
     return np.random.uniform() > (1 - prob)
 
@@ -112,3 +100,16 @@ def _find_connected_components(curr_loc, env):
                 if env[grid][0] == 6:
                     stack.append(grid)
     return sorted(visited, key = lambda x: x[0])
+
+def _scatter(curr_loc, env):
+    free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
+    if free_locs:
+        next_loc = random.choice(free_locs)
+        _move(curr_loc, next_loc, env[curr_loc], env)
+        
+def _replicate(curr_loc, env):
+    neighbors = _return_neighboring_occupied_locs(curr_loc, env)
+    if neighbors:
+        for neighbor in neighbors:
+            if env[neighbor][0] == 2:  # res is id 2
+                env[neighbor] = env[curr_loc]
