@@ -2,7 +2,8 @@ import random
 
 import numpy as np
 
-from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample, _replicate, _scatter
+from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample, 
+from .actions import _replicate, _scatter
 
 def Dreg(curr_loc, env):
     
@@ -212,7 +213,3 @@ def Wind(curr_loc, env):
             _move(curr_loc, next_loc, element, env)
         else:
             env.pop(curr_loc)
-                    
-        
-def Kite(curr_loc, env):
-    pass
