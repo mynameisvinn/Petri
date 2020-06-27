@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample
+from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample, _replicate, _scatter
 
 def Dreg(curr_loc, env):
     
@@ -36,20 +36,14 @@ def Dreg(curr_loc, env):
 
     
 def Res(curr_loc, env):
-    e = ("Res", None)
-    free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
-    if free_locs:
-        next_loc = random.choice(free_locs)
-        _move(curr_loc, next_loc, e, env)
+    if _draw(0.2):
+        curr_loc, env = _scatter(curr_loc, env)
         
 
 def Data(curr_loc, env):
-    if _draw(0.20):
-        e = ("Data", env[curr_loc][1])
-        free_locs = _return_neighboring_unoccupied_locs(curr_loc, env)
-        if free_locs:
-            next_loc = random.choice(free_locs)
-            _move(curr_loc, next_loc, e, env)
+    curr_loc, env = _replicate(curr_loc, env)
+    if _draw(0.2):
+        curr_loc, env = _scatter(curr_loc, env)
     
 
 def Emitter(curr_loc, env):
