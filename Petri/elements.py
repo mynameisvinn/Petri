@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample, 
+from .utils import _return_all_neighboring_locs, _draw, _return_neighboring_unoccupied_locs, _move, _return_neighboring_occupied_locs, _find_connected_components, _sample
 from .actions import _replicate, _scatter
 
 def Dreg(curr_loc, env):
@@ -42,8 +42,9 @@ def Res(curr_loc, env):
         
 
 def Data(curr_loc, env):
-    curr_loc, env = _replicate(curr_loc, env)
-    if _draw(0.2):
+    if _draw(0.1):
+        curr_loc, env = _replicate(curr_loc, env)
+    if _draw(0.1):
         curr_loc, env = _scatter(curr_loc, env)
     
 
